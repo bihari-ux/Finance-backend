@@ -14,6 +14,7 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 4000;
 
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -24,11 +25,7 @@ mongoose
   .catch((err) => console.error("MongoDB connection error:", err));
 
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "https://relaxed-panda-f6dac5.netlify.app",
-];
-
+const allowedOrigins = ["http://localhost:5173"];
 app.use(
   cors({
     origin: allowedOrigins,
@@ -47,6 +44,7 @@ const storage = multer.diskStorage({
     cb(null, path.join(__dirname, "uploads"));
   },
   filename: function (req, file, cb) {
+  
     cb(null, Date.now() + path.extname(file.originalname));
   },
 });
@@ -65,6 +63,7 @@ const userSchema = new mongoose.Schema({
 });
 const User = mongoose.model("User", userSchema);
 
+
 const productSchema = new mongoose.Schema({
   name: { type: String, required: true },
   price: { type: Number, required: true },
@@ -73,7 +72,7 @@ const productSchema = new mongoose.Schema({
 });
 const Product = mongoose.model("Product", productSchema);
 
-
+// Auth routes
 const authRouter = express.Router();
 
 authRouter.post("/register", async (req, res) => {
@@ -158,6 +157,7 @@ app.use("/api/auth", authRouter);
 
 const productRouter = express.Router();
 
+
 productRouter.get("/", async (req, res) => {
   try {
     const products = await Product.find({});
@@ -167,6 +167,7 @@ productRouter.get("/", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 productRouter.post("/", upload.single("image"), async (req, res) => {
   try {
@@ -194,6 +195,7 @@ productRouter.post("/", upload.single("image"), async (req, res) => {
   }
 });
 
+
 productRouter.put("/:id", upload.single("image"), async (req, res) => {
   try {
     const { id } = req.params;
@@ -220,6 +222,7 @@ productRouter.put("/:id", upload.single("image"), async (req, res) => {
   }
 });
 
+
 productRouter.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -237,6 +240,7 @@ app.use("/api/products", productRouter);
 app.get("/", (req, res) => {
   res.send("Home Page");
 });
+
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
