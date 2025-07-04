@@ -25,7 +25,7 @@ mongoose
   .catch((err) => console.error("MongoDB connection error:", err));
 
 
-const allowedOrigins = ["http://localhost:5173"];
+const allowedOrigins = ["http://localhost:5173,https://legendary-strudel-2c2c55.netlify.app"];
 app.use(
   cors({
     origin: allowedOrigins,
